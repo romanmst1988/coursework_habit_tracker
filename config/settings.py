@@ -1,4 +1,5 @@
 import os
+from datetime import timedelta
 from pathlib import Path
 from dotenv import load_dotenv
 load_dotenv()
@@ -29,11 +30,13 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
 
     "rest_framework",
+    "rest_framework.authtoken",
     "corsheaders",
 
     "users",
     "habits",
     "telegram_bot",
+    "django_celery_beat",
 ]
 
 MIDDLEWARE = [
@@ -102,6 +105,10 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
+CELERY_BROKER_URL = "redis://localhost:6379/0"
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_TASK_SERIALIZER = "json"
+
 LANGUAGE_CODE = "en-us"
 
 TIME_ZONE = "UTC"
@@ -128,5 +135,11 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
     ),
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'AUTH_HEADER_TYPES': ('Bearer',),
 }
 

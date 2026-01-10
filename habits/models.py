@@ -27,7 +27,9 @@ class Habit(models.Model):
     )
 
     periodicity = models.PositiveSmallIntegerField(default=1)
-    execution_time = models.PositiveSmallIntegerField()
+    execution_time = models.PositiveSmallIntegerField(
+        verbose_name="Время выполнения (сек)",
+    )
     is_public = models.BooleanField(default=False)
 
     def __str__(self):
