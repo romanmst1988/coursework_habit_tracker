@@ -1,4 +1,6 @@
 import os
+from drf_yasg import openapi
+from datetime import timedelta
 from pathlib import Path
 from dotenv import load_dotenv
 load_dotenv()
@@ -7,6 +9,8 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = os.getenv('DEBUG') == 'True'
 
 AUTH_USER_MODEL = 'users.User'
+
+TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -29,11 +33,15 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
 
     "rest_framework",
+    "rest_framework.authtoken",
     "corsheaders",
 
     "users",
     "habits",
     "telegram_bot",
+    "django_celery_beat",
+    "django_filters",
+    "drf_yasg",
 ]
 
 MIDDLEWARE = [
@@ -102,6 +110,10 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
+CELERY_BROKER_URL = "redis://localhost:6379/0"
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_TASK_SERIALIZER = "json"
+
 LANGUAGE_CODE = "en-us"
 
 TIME_ZONE = "UTC"
@@ -128,5 +140,22 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
     ),
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'AUTH_HEADER_TYPES': ('Bearer',),
+}
+
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header',
+            'description': 'JWT Authorization header: Bearer <your_token>',
+        }
+    },
 }
 
