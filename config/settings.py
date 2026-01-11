@@ -1,4 +1,5 @@
 import os
+from drf_yasg import openapi
 from datetime import timedelta
 from pathlib import Path
 from dotenv import load_dotenv
@@ -39,6 +40,8 @@ INSTALLED_APPS = [
     "habits",
     "telegram_bot",
     "django_celery_beat",
+    "django_filters",
+    "drf_yasg",
 ]
 
 MIDDLEWARE = [
@@ -143,5 +146,16 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(hours=1),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'AUTH_HEADER_TYPES': ('Bearer',),
+}
+
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header',
+            'description': 'JWT Authorization header: Bearer <your_token>',
+        }
+    },
 }
 
