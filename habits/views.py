@@ -1,14 +1,14 @@
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
 from habits.models import Habit
-from habits.serializers import HabitSerializer
-from habits.permissions import IsOwner
 from habits.pagination import HabitPagination
+from habits.permissions import IsOwner
+from habits.serializers import HabitSerializer
 
-from drf_yasg.utils import swagger_auto_schema
-from drf_yasg import openapi
 
 class PublicHabitViewSet(ReadOnlyModelViewSet):
     queryset = Habit.objects.filter(is_public=True)
@@ -17,14 +17,14 @@ class PublicHabitViewSet(ReadOnlyModelViewSet):
 
     @swagger_auto_schema(
         operation_summary="Список публичных привычек",
-        operation_description="""
-Возвращает список всех публичных привычек других пользователей.
-
-🔹 Доступно без авторизации  
-🔹 Только чтение  
-🔹 Используется для экрана «Примеры привычек»
-""",
-        responses={200: HabitSerializer(many=True)}
+        operation_description=(
+            "\n"
+            "Возвращает список всех публичных привычек других пользователей.\n"
+            "🔹 Доступно без авторизации  \n"
+            "🔹 Только чтение  \n"
+            "🔹 Используется для экрана «Примеры привычек»\n"
+        ),
+        responses={200: HabitSerializer(many=True)},
     )
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
@@ -32,7 +32,7 @@ class PublicHabitViewSet(ReadOnlyModelViewSet):
     @swagger_auto_schema(
         operation_summary="Детали публичной привычки",
         operation_description="Просмотр одной публичной привычки",
-        responses={200: HabitSerializer}
+        responses={200: HabitSerializer},
     )
     def retrieve(self, request, *args, **kwargs):
         return super().retrieve(request, *args, **kwargs)
