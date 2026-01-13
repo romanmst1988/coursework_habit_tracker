@@ -128,7 +128,7 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-#.env
+.env
 #*.env
 .venv
 env/
@@ -192,4 +192,3 @@ cython_debug/
 .cursorignore
 .cursorindexingignore
 /.venv_clean/
-.env
