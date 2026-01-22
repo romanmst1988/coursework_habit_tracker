@@ -1,17 +1,21 @@
-version: '3.9'
+version: "3.9"
 
 services:
   db:
     image: postgres:16
     container_name: habit-db
-    environment:
-      POSTGRES_DB: habit_tracker
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: Kucher05
     volumes:
       - pg_data:/var/lib/postgresql/data
+    env_file:
+      - .env
     ports:
       - "5432:5432"
+
+  redis:
+    image: redis:7-alpine
+    container_name: habit-redis
+    ports:
+      - "6379:6379"
 
   web:
     build: .
@@ -21,14 +25,31 @@ services:
       - .:/habits
     ports:
       - "8000:8000"
+    env_file:
+      - .env
     depends_on:
       - db
-    environment:
-      DB_HOST: db
-      DB_NAME: habit_tracker
-      DB_USER: postgres
-      DB_PASSWORD: Kucher05
-      DB_PORT: 5432
+      - redis
+
+  celery:
+    build: .
+    container_name: habit-celery
+    command: celery -A config worker -l info
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - redis
+
+  celery-beat:
+    build: .
+    container_name: habit-celery-beat
+    command: celery -A config beat -l info
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - redis
 
 volumes:
   pg_data:

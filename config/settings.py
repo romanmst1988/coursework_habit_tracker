@@ -25,8 +25,10 @@ DEBUG = env("DEBUG")
 # SECRET_KEY = "django-insecure-z-g892h9=o&_51pp6+98nd@gi35wwzc=(cs27bpfxl6(@_1i$f"
 # DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = env.list(
+    "ALLOWED_HOSTS",
+    default=["localhost", "127.0.0.1", "web"]
+)
 
 # Application definition
 
